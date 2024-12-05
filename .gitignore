@@ -32,3 +32,5 @@ test-output/
 ### Arquivos do Maven ###
 /.mvn/
 /maven/
+
+ChatGPTConfig.java
