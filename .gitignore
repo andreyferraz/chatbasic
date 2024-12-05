@@ -1,0 +1,34 @@
+### Arquivos compilados ###
+*.class
+
+### Diretórios de build ###
+target/
+build/
+dist/
+
+### Arquivos de configuração do VSCode ###
+.vscode/
+
+### Arquivos de log ###
+*.log
+logs/
+
+### Arquivos de teste ###
+*.tmp
+test-output/
+
+### Arquivos de dependências ###
+*.jar
+*.war
+*.ear
+
+### Outros arquivos desnecessários ###
+*.iml
+*.gitattributes
+*.gitmodules
+*.settings/
+#*.properties
+
+### Arquivos do Maven ###
+/.mvn/
+/maven/
