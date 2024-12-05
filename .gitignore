@@ -27,7 +27,7 @@ test-output/
 *.gitattributes
 *.gitmodules
 *.settings/
-*.properties
+/src/main/resources/application.properties
 
 ### Arquivos do Maven ###
 /.mvn/
