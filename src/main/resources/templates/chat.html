@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body class="container">
+    <h4>Chatbot</h4>
+    <div>
+        <div th:each="message : ${messages}">
+            <div th:class="${message.sender == 'user' ? 'right-align' : 'left-align'}">
+                <div class="card-panel teal lighten-4">
+                    <p th:text="${message.content}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="post" action="/send">
+        <div class="input-field">
+            <input type="text" name="userMessage" placeholder="Digite sua mensagem">
+        </div>
+        <button class="btn" type="submit">Enviar</button>
+    </form>
+</body>
+</html>
