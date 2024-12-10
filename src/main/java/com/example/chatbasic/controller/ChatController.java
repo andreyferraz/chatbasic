@@ -1,6 +1,5 @@
 package com.example.chatbasic.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,23 +19,39 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    // Lista de mensagens inicializada por requisição (melhor para múltiplos usuários)
     private final List<Message> messages = new ArrayList<>();
 
     @GetMapping("/")
-    public String getChatPage(Model model){
+    public String getChatPage(Model model) {
         model.addAttribute("messages", messages);
         return "chat";
     }
 
     @PostMapping("/send")
-    public String sendMessage(@RequestParam("userMessage") String userMessage, Model model){
+    public String sendMessage(@RequestParam("userMessage") String userMessage, Model model) {
+        // Verificar se a mensagem do usuário está vazia
+        if (userMessage == null || userMessage.trim().isEmpty()) {
+            messages.add(new Message("Por favor, insira uma mensagem antes de enviar.", "bot"));
+            model.addAttribute("messages", messages);
+            return "chat";
+        }
+
+        // Adicionar mensagem do usuário à lista
         messages.add(new Message(userMessage, "user"));
-        try{
+
+        try {
+            // Chamar o serviço para obter resposta do ChatGPT
             String botResponse = chatService.getChatGPTResponse(userMessage);
             messages.add(new Message(botResponse, "bot"));
-        } catch(IOException e){
-            messages.add(new Message("Erro ao processar sua solicitação.", "bot"));
+        } catch (Exception e) {
+            // Log de erro para diagnóstico
+            System.err.println("Erro ao processar a mensagem no ChatService: " + e.getMessage());
+            // Adicionar resposta genérica em caso de falha
+            messages.add(new Message("Desculpe, não consegui processar sua solicitação. Tente novamente mais tarde.", "bot"));
         }
+
+        // Adicionar mensagens ao modelo
         model.addAttribute("messages", messages);
         return "chat";
     }
