@@ -35,9 +35,9 @@ public class ChatService {
 
             // Criar o corpo da requisição
             JSONObject json = new JSONObject();
-            json.put("model", "davinci-002");
+            json.put("model", "gpt-4o");
             json.put("prompt", prompt);
-            json.put("max_tokens", 150);
+            json.put("max_tokens", 500);
             json.put("temperature", 0.7); // Opcional: Configurar criatividade da resposta
 
             RequestBody body = RequestBody.create(
