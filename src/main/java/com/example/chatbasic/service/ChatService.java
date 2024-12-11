@@ -28,56 +28,51 @@ public class ChatService {
 
     public String getChatGPTResponse(String prompt) {
         try {
-            // Verificar se a chave da API está configurada
             if (chatGPTConfig.getApiKey() == null || chatGPTConfig.getApiKey().isEmpty()) {
                 throw new IllegalArgumentException("A chave da API do ChatGPT não está configurada.");
             }
-
-            // Criar o corpo da requisição
+    
             JSONObject json = new JSONObject();
-            json.put("model", "gpt-4o");
+            json.put("model", "gpt-3.5-turbo-instruct");
             json.put("prompt", prompt);
             json.put("max_tokens", 500);
-            json.put("temperature", 0.7); // Opcional: Configurar criatividade da resposta
-
+            json.put("temperature", 0.7);
+    
             RequestBody body = RequestBody.create(
                     json.toString(),
                     MediaType.parse("application/json")
             );
-
-            // Construir a requisição
+    
             Request request = new Request.Builder()
                     .url(chatGPTConfig.getApiUrl())
                     .addHeader("Authorization", "Bearer " + chatGPTConfig.getApiKey())
                     .post(body)
                     .build();
-
-            // Executar a requisição
+    
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Erro na chamada da API: " + response.message());
+                    throw new IOException("Erro na chamada da API: " + response.message() + " - " + response.body().string());
                 }
-
-                // Processar o corpo da resposta
+    
                 String responseBodyString = response.body().string();
+                System.out.println("Resposta da API: " + responseBodyString); // Adicione este log para verificar a resposta completa
+    
                 JSONObject responseBody = new JSONObject(responseBodyString);
-
-                // Verificar se "choices" existe e tem dados
+    
                 if (responseBody.has("choices") && responseBody.getJSONArray("choices").length() > 0) {
                     return responseBody.getJSONArray("choices").getJSONObject(0).getString("text").trim();
                 } else {
                     throw new IOException("A resposta da API não contém o campo 'choices' esperado.");
                 }
             }
-
+    
         } catch (IOException e) {
-            // Logar e retornar um erro genérico
             System.err.println("Erro ao chamar a API do ChatGPT: " + e.getMessage());
             return "Desculpe, ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
         } catch (Exception e) {
-            // Tratar outros erros
             System.err.println("Erro inesperado: " + e.getMessage());
             return "Desculpe, ocorreu um erro inesperado.";
         }
     }
+       
 }
